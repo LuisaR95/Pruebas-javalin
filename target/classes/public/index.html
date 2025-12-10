@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Productos Javalin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Productos CRUD (Javalin)</h1>
+
+    <div id="mensaje" class="success"></div>
+    <div id="error" class="error"></div>
+
+    <div class="form-container">
+        <h2>Añadir / Editar Producto</h2>
+        <form id="formProducto">
+            <input type="hidden" id="producto-id" />
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nombre">Nombre del producto</label>
+                    <input type="text" id="nombre" required/>
+                </div>
+                <div class="form-group">
+                    <label for="precio">Precio (EUR)</label>
+                    <input type="number" id="precio" min="0" step="0.01" required/>
+                </div>
+                <div class="form-group">
+                    <button class="btn" type="submit" id="btnGuardar">Guardar</button>
+                    <button class="btn btn-secondary" type="button" id="btnLimpiar">Limpiar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <h2>Productos Disponibles</h2>
+    <table id="tablaProductos">
+        <thead>
+        <tr>
+            <th style="width: 10%">ID</th>
+            <th style="width: 50%">Nombre</th>
+            <th style="width: 20%">Precio</th>
+            <th class="actions">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td colspan="4" class="loading">Cargando productos...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
