@@ -2,60 +2,82 @@ package services;
 
 import models.Producto;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/*
- * Servicio para la logica de negocio de productos
- * Gestiona el almacenamiento de memoria y operaciones CRUD
- **/
-
+/**
+ * Servicio para la lógica de negocio de productos.
+ * Gestiona el almacenamiento en memoria de forma segura para hilos (thread-safe).
+ */
 public class ProductoService {
-    //Inicializamos la bbdd en memoria
-    private Map<Integer, Producto> productos = new HashMap();
-    private int siguienteId = 1;
 
-    //Inicializa el servicio con algunos productos de ejemplo
+    // ConcurrentHashMap asegura que el mapa sea accesible por múltiples hilos sin errores
+    private static final Map<Integer, Producto> productos = new ConcurrentHashMap<>();
+
+    // AtomicInteger para manejar IDs de forma segura y evitar duplicados
+    private static final AtomicInteger siguienteId = new AtomicInteger(1);
+
+    /**
+     * Inicializa el servicio con datos de ejemplo si la lista está vacía.
+     */
     public ProductoService() {
-        productos.put(1, new Producto(1, "Portatil", 1000));
-        productos.put(2, new Producto(2, "Raton", 2000));
-        productos.put(3, new Producto(3, "Teclado", 3000));
-        siguienteId = 4;
+        if (productos.isEmpty()) {
+            crearEjemplo(new Producto(0, "Portatil", 1000.0));
+            crearEjemplo(new Producto(0, "Raton", 20.0));
+            crearEjemplo(new Producto(0, "Teclado", 50.0));
+        }
     }
-    /*
-     * Obtener todos los produtos
-     **/
+
+    /**
+     * Helper para cargar datos iniciales sin saltar IDs.
+     */
+    private void crearEjemplo(Producto p) {
+        int id = siguienteId.getAndIncrement();
+        p.setId(id);
+        productos.put(id, p);
+    }
+
+    /**
+     * Obtener todos los productos.
+     */
     public List<Producto> obtenerTodos() {
         return new ArrayList<>(productos.values());
     }
-    /*
-     * Obtener un producto por su ID
-     **/
 
+    /**
+     * Obtener un producto por su ID.
+     */
     public Producto obtenerPorId(int id) {
         return productos.get(id);
     }
-    /*
-     * Crear nuevo producto
-     **/
 
+    /**
+     * Crear un nuevo producto.
+     * El ID se genera automáticamente.
+     */
     public Producto crear(Producto producto) {
-        producto.setId(++siguienteId);
-        productos.put(producto.getId(), producto);
+        int id = siguienteId.getAndIncrement();
+        producto.setId(id);
+        productos.put(id, producto);
         return producto;
     }
 
-    /*
-     * Actualizar un producto
-     **/
+    /**
+     * Actualizar un producto existente.
+     */
     public Producto actualizar(Producto producto) {
-        productos.put(producto.getId(), producto);
-        return producto;
+        if (productos.containsKey(producto.getId())) {
+            productos.put(producto.getId(), producto);
+            return producto;
+        }
+        return null;
     }
-    /*
-     * Eliminar un producto
-     **/
+
+    /**
+     * Eliminar un producto.
+     */
     public boolean eliminar(int id) {
         return productos.remove(id) != null;
     }

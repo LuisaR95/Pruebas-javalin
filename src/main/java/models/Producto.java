@@ -1,27 +1,32 @@
 package models;
 
-/*
- *Clase modelo Producto
- * Representa un producto con su id, nombre y precio
- **/
-
+/**
+ * Clase modelo Producto.
+ * Representa la entidad de un producto dentro del sistema.
+ */
 public class Producto {
-    //Inicializacion de sus variables
-    private int  id;
+    private int id;
     private String nombre;
     private double precio;
 
-    //Constructo vacio (requerido para Jackson/Gson)
+    /**
+     * Constructor vacío requerido para la deserialización de JSON (Jackson/Gson).
+     */
     public Producto() {}
 
-
-
-
+    /**
+     * Constructor con todos los campos.
+     * * @param id Identificador único del producto.
+     * @param nombre Nombre descriptivo.
+     * @param precio Valor unitario.
+     */
     public Producto(int id, String nombre, double precio) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
     }
+
+    // Getters y Setters
 
     public int getId() {
         return id;
@@ -31,7 +36,6 @@ public class Producto {
         this.id = id;
     }
 
-
     public String getNombre() {
         return nombre;
     }
@@ -40,11 +44,11 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public Double getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(Double precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 
@@ -56,5 +60,4 @@ public class Producto {
                 ", precio=" + precio +
                 '}';
     }
-
 }
